@@ -259,8 +259,8 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 				return true;
 
 			var methods = new List<MethodDef>(DotNetUtils.FindMethods(stringsEncodingClass.Methods, "System.String", new string[] { "System.Int32" }));
-			if (methods.Count != 1)
-				return false;
+			//if (methods.Count != 1)
+			//	return false;
 
 			stringDecrypterMethod = methods[0];
 			return true;

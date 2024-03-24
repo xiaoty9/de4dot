@@ -47,7 +47,9 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 			if (!CanDecrypt)
 				throw new ApplicationException("Can't decrypt strings since decryptedData is null");
 
-			int index = id - (token & 0x00FFFFFF) - stringOffset;
+			int index = id - (token & 0x00FFFFFF);
+						   index ^= 0x666BEEF;
+						   index -= stringOffset;
 			int len = DeobUtils.ReadVariableLengthInt32(decryptedData, ref index);
 
 			switch (StringDecrypterInfo.DecrypterVersion) {
@@ -59,10 +61,12 @@ namespace de4dot.code.deobfuscators.SmartAssembly {
 				return Encoding.Unicode.GetString(buf);
 
 			case StringDecrypterVersion.V2:
-				return Encoding.UTF8.GetString(Convert.FromBase64String(Encoding.ASCII.GetString(decryptedData, index, len)));
+				return Encoding.UTF8.GetString(
+					Convert.FromBase64String(Encoding.ASCII.GetString(decryptedData, index, len)));
 
 			default:
-				return Encoding.UTF8.GetString(Convert.FromBase64String(Encoding.UTF8.GetString(decryptedData, index, len)));
+				return Encoding.UTF8.GetString(
+					Convert.FromBase64String(Encoding.UTF8.GetString(decryptedData, index, len)));
 			}
 		}
 	}
